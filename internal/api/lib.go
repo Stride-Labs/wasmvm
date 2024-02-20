@@ -70,6 +70,8 @@ func StoreCode(cache Cache, wasm []byte) ([]byte, error) {
 	fmt.Println("ABOUT TO SAVE WASM")
 	fmt.Printf("CACHE PTR: %+v\n", *cache.ptr)
 	fmt.Printf("W PTR: %+v\n", *w.ptr)
+	fmt.Printf("ERROR MSG: %+v\n", errmsg)
+	fmt.Printf("CBOOL: %+v\n", cbool(false))
 
 	checksum, err := C.save_wasm(cache.ptr, w, cbool(false), &errmsg)
 	if err != nil {
