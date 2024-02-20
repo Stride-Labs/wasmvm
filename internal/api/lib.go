@@ -64,13 +64,19 @@ func StoreCode(cache Cache, wasm []byte) ([]byte, error) {
 	fmt.Printf("Cache: %+v\n", cache)
 	w := makeView(wasm)
 	fmt.Printf("W: %+v\n", w)
+	fmt.Println("")
 	defer runtime.KeepAlive(wasm)
 	errmsg := uninitializedUnmanagedVector()
 	fmt.Println("ABOUT TO SAVE WASM")
+	fmt.Printf("CACHE PTR: %+v\n", *cache.ptr)
+	fmt.Printf("W PTR: %+v\n", *w.ptr)
+
 	checksum, err := C.save_wasm(cache.ptr, w, cbool(false), &errmsg)
 	if err != nil {
+		fmt.Println("ERROR!!", err.Error())
 		return nil, errorWithMessage(err, errmsg)
 	}
+
 	fmt.Println("SAVED WASM")
 	return copyAndDestroyUnmanagedVector(checksum), nil
 }
