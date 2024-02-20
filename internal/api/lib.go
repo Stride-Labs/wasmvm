@@ -59,13 +59,19 @@ func ReleaseCache(cache Cache) {
 }
 
 func StoreCode(cache Cache, wasm []byte) ([]byte, error) {
+	fmt.Println("IN STORE CODE")
+	fmt.Println("WASM BYTE CODE", wasm[:10])
+	fmt.Printf("Cache: %+v\n", cache)
 	w := makeView(wasm)
+	fmt.Printf("W: %+v\n", w)
 	defer runtime.KeepAlive(wasm)
 	errmsg := uninitializedUnmanagedVector()
+	fmt.Println("ABOUT TO SAVE WASM")
 	checksum, err := C.save_wasm(cache.ptr, w, cbool(false), &errmsg)
 	if err != nil {
 		return nil, errorWithMessage(err, errmsg)
 	}
+	fmt.Println("SAVED WASM")
 	return copyAndDestroyUnmanagedVector(checksum), nil
 }
 
